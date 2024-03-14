@@ -4,7 +4,7 @@
 
 const account1={
     owner:'Rahid Amin',
-    movement:[100,200,300,-400,-500,600],
+    movement:[100,200,300,-400,-500,600,.85],
     interestRate:1.2,
     pin:111,
 }
@@ -66,7 +66,7 @@ const displayMovements=function(movements)
         const html=`<div class="movements__row">
         <div class="movements__type movements__type--${type}">${i+1} ${type}</div>
         
-        <div class="movements__value">${mov}</div>
+        <div class="movements__value">${mov} $</div>
       </div>`;
 
       //here insertAdjacentHTML using for row looping
@@ -81,6 +81,56 @@ displayMovements(account1.movement);
 // console.log(containerMovements.innerHTML) //Important
 
 
+//calculate and display balance
+
+const calcDisplayBalance=function(movements)
+{
+ const balance=movements.reduce((acc,mov)=>acc+mov,0);
+ labelBalance.textContent=`${balance} $`;
+}
+calcDisplayBalance(account1.movement);
+
+//Calculate Display Summary
+const calcDisplaySummary=function(movements)
+{
+ const incomes=movements.filter(mov=>mov>0).reduce((acc,mov)=>mov+acc,0);
+ labelSumIn.textContent=`${incomes} $`;
+
+ const out=movements.filter(mov=>mov<0).reduce((acc,mov)=>acc+mov,0);
+ labelSumOut.textContent=`${Math.abs(out)} $`;
+
+ const interest=movements.filter(mov=>mov>0).map(deposit=>(deposit*1.2)/100).filter((int,i,arr)=>
+ {
+  console.log(arr);
+  return int>1;
+ }).reduce((acc,mov)=>acc+mov,0);
+
+ 
+ labelSumInterest.textContent=`${interest.toFixed(2)}$`; //here toFixed used to write 2 numbers after dot 
+ 
+}
+
+calcDisplaySummary(account1.movement);
+
+
+
+//computing username and add it to the the account array(side effect).
+
+const createUserName=function(accs)
+{
+    accs.forEach(function(acc)
+    {
+      acc.userName=acc.owner.toLowerCase().split(' ').map((name1)=>name1[0]).join('');
+    })
+
+}
+
+createUserName(account);
+console.log(account);
+
+
+
+///---------These codes are out of the project-------------////
 //----------11:The Map Method(Out of the Project)------------
 
 const movements=[100,200,300,400,500];
@@ -111,7 +161,7 @@ const movementDescriptions=movements.map((mov,i,arr)=>
 
 console.log(movementDescriptions);
 
-//---12:Computing Usernames
+//---12:Computing Usernames------------////
 
 //const user='Rahid Amin siddique';
 
@@ -136,16 +186,77 @@ console.log(movementDescriptions);
 
 // console.log(createUserName(account2.owner ))
 
-//computing username and add it to the the account array(side effect).
 
-const createUserName=function(accs)
+
+//-----------------The Filter Method..-------///
+//it only returns the values which fulfill the specific requirements.
+const movement1=[100,200,300,-300,-200,-100];
+const deposits1=movement1.filter(function(mov)
 {
-    accs.forEach(function(acc)
-    {
-      acc.userName=acc.owner.toLowerCase().split(' ').map((name1)=>name1[0]).join('');
-    })
+    return mov>0;
+})
+console.log(deposits1)
 
-}
+// const depositForForOfLoop=[];
+// for(const mov of movement1)
+// {
+//     if(mov>0)
+//     {
+//         depositForForOfLoop.push(mov)
+//     }
+// }
+// console.log(depositForForOfLoop)
 
-createUserName(account)
-console.log(account)
+const withdrawals1=movement1.filter(function(mov)
+{
+
+    return mov<0;
+})
+console.log(withdrawals1);
+
+//---------------The Reduce Method......./////
+//this method returns one single value
+//Accumulator exists in reduce method
+const movement2=[100,200,300,400,-300,-200,-100];
+
+const balance=movement2.reduce(function(accumulator,cur,i,arr)
+{
+    console.log(`${i}:${accumulator}`)
+  return accumulator+cur;
+
+},100)
+//here 100 is the initial value of accumulator
+
+console.log(balance);
+
+//Max Value
+
+const maxBalance=movement2.reduce(function(acc,mov)
+{
+  
+  if(acc>mov)
+  {
+    return acc;
+  }
+  else{
+    return mov;
+  }
+
+},movement2[0]);
+console.log(maxBalance)
+
+///-------The Magic of Chaining------------////
+const movement3=[100,200,300,400,-300,-200,-100];
+const usdToTaka=109.73;
+
+//pipeline
+const totalDepositeTaka=movement3.filter(function(mov){
+  return mov>0
+}).map(function(mov)
+{
+  return mov*usdToTaka;
+}).reduce(function(acc,mov)
+{
+  return acc+mov;
+},0)
+console.log(totalDepositeTaka)
