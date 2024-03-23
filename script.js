@@ -77,29 +77,29 @@ const displayMovements=function(movements)
 
 }
 
-displayMovements(account1.movement);
+
 // console.log(containerMovements.innerHTML) //Important
 
 
 //calculate and display balance
 
-const calcDisplayBalance=function(movements)
+const calcDisplayBalance=function(acc)
 {
- const balance=movements.reduce((acc,mov)=>acc+mov,0);
- labelBalance.textContent=`${balance} $`;
+ acc.balance=acc.movement.reduce((acc,mov)=>acc+mov,0);
+ labelBalance.textContent=`${acc.balance.toFixed(2)} $`;
 }
-calcDisplayBalance(account1.movement);
+
 
 //Calculate Display Summary
-const calcDisplaySummary=function(movements)
+const calcDisplaySummary=function(acc)
 {
- const incomes=movements.filter(mov=>mov>0).reduce((acc,mov)=>mov+acc,0);
+ const incomes=acc.movement.filter(mov=>mov>0).reduce((acc,mov)=>mov+acc,0);
  labelSumIn.textContent=`${incomes} $`;
 
- const out=movements.filter(mov=>mov<0).reduce((acc,mov)=>acc+mov,0);
+ const out=acc.movement.filter(mov=>mov<0).reduce((acc,mov)=>acc+mov,0);
  labelSumOut.textContent=`${Math.abs(out)} $`;
 
- const interest=movements.filter(mov=>mov>0).map(deposit=>(deposit*1.2)/100).filter((int,i,arr)=>
+ const interest=acc.movement.filter(mov=>mov>0).map(deposit=>(deposit*acc.interestRate)/100).filter((int,i,arr)=>
  {
   console.log(arr);
   return int>1;
@@ -110,7 +110,6 @@ const calcDisplaySummary=function(movements)
  
 }
 
-calcDisplaySummary(account1.movement);
 
 
 
@@ -127,6 +126,73 @@ const createUserName=function(accs)
 
 createUserName(account);
 console.log(account);
+
+const updateUi=function(acc)
+{
+  //Display Movements
+  displayMovements(acc.movement);
+
+  //Display balance
+  calcDisplayBalance(acc);
+
+  //Display summary
+  calcDisplaySummary(acc);
+}
+
+
+//Event Handler
+let currentAccount;
+btnLogin.addEventListener('click',function(e)
+{
+  //prevent form from submitting`
+  e.preventDefault();
+  console.log('Clicked')
+
+  currentAccount=account.find(function(acc)
+  {
+    
+   return acc.userName===inputLoginUsername.value;
+  })
+  console.log(currentAccount)
+
+  if(currentAccount?.pin===Number(inputLoginPin.value))
+  {
+    //Display UI and message
+    labelWelcome.textContent=`Welcome Back,${currentAccount.owner.split(' ')[0]}` 
+    containerApp.style.opacity=100;
+
+    //Clear input fields
+    inputLoginUsername.value=inputLoginPin.value='';
+    inputLoginPin.blur();
+  
+    //Update Ui
+  updateUi(currentAccount);
+  }
+  
+})
+
+btnTransfer.addEventListener('click',function(event)
+{
+  event.preventDefault();
+  const amount=Number(inputTransferAmount.value);
+  const receiverAccount=account.find(function(acc)
+  {
+    return acc.userName=== inputTransferTo.value;
+  })
+   inputTransferAmount.value=inputTransferTo.value='';
+   inputTransferAmount.blur();
+
+  if(amount>0 && currentAccount.balance>=amount && receiverAccount && receiverAccount?.userName !== currentAccount.userName)
+  {
+    //Doing the Transfer
+    currentAccount.movement.push(-amount);
+    receiverAccount.movement.push(amount);
+
+    //Update UI
+    updateUi(currentAccount);
+  }
+
+})
 
 
 
@@ -259,4 +325,25 @@ const totalDepositeTaka=movement3.filter(function(mov){
 {
   return acc+mov;
 },0)
-console.log(totalDepositeTaka)
+console.log(totalDepositeTaka);
+
+//-------------The Find Method--------------------////
+
+//find method returns the first and only one value of an array which fulfill the condition
+//it returns value not array
+
+const firstWithdrawl=movement3.find(function(mov){
+ return mov<0
+})
+console.log(firstWithdrawl);
+
+//important
+
+const myAccount=account.find(function(acc)
+{
+  //Find an object in an arry by one of it's property name
+  return acc.owner==='Rahid Amin';
+})
+
+console.log(account);
+console.log(myAccount);
