@@ -194,6 +194,31 @@ btnTransfer.addEventListener('click',function(event)
 
 })
 
+btnClose.addEventListener('click',function(e)
+{
+ 
+  
+  e.preventDefault();
+  if(inputCloseUsername.value===currentAccount.userName && Number(inputClosePin.value)===currentAccount.pin)
+  {
+    //findInd also returns the full index
+   const index=account.findIndex(function(acc)
+   {
+      return acc.userName===currentAccount.userName;
+   }) 
+    //delete account 
+    account.splice(index,1);
+
+    //hide ui
+    containerApp.style.opacity=0;
+  
+  }
+  inputCloseUsername.value=inputClosePin.value='';
+  inputClosePin.blur();
+ 
+
+})
+
 
 
 ///---------These codes are out of the project-------------////
@@ -347,3 +372,29 @@ const myAccount=account.find(function(acc)
 
 console.log(account);
 console.log(myAccount);
+
+//--------------Splice Method--------------///
+
+const months=['jan','march','april','may','july','aug'];
+
+//insert feb in months array
+months.splice(1,0,'feb');
+console.log(months);
+
+//remove july and add june in months
+months.splice(5,1,'june');
+console.log(months);
+//only remove aug from months
+months.splice(6,1);
+console.log(months)
+
+///-------------------Some and Every--------------------////
+const movement4=[150,250,350,450,-550,-650];
+//returns boolean value
+//Equality
+console.log(movement4.includes(450));
+
+//returns boolean value
+//Condition
+const anyDeposites=movement4.some(mov=>mov>0)
+console.log(anyDeposites)
