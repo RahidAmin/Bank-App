@@ -194,6 +194,25 @@ btnTransfer.addEventListener('click',function(event)
 
 })
 
+btnLoan.addEventListener('click',function(e)
+{
+e.preventDefault();
+const amount=Number(inputLoanAmount.value);
+if(amount>0 && currentAccount.movement.some(function(mov)
+{
+  return mov>=amount*.1;
+}))
+{
+  currentAccount.movement.push(amount);
+  updateUi(currentAccount);
+
+  inputLoanAmount.value='';
+  inputLoanAmount.blur();
+
+}
+
+})
+
 btnClose.addEventListener('click',function(e)
 {
  
@@ -393,8 +412,15 @@ const movement4=[150,250,350,450,-550,-650];
 //returns boolean value
 //Equality
 console.log(movement4.includes(450));
-
+//----Some--
+console.log(movement4.some(mov=>mov===450));
 //returns boolean value
 //Condition
 const anyDeposites=movement4.some(mov=>mov>0)
 console.log(anyDeposites)
+//---Every--
+const movement5=[100,300,500,700];
+console.log(movement5.every(function(mov)
+{
+  return mov>0;
+}))
