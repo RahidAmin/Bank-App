@@ -471,38 +471,64 @@ console.log(movement6);
 
 //-----------Creating and filling arrays------------//
 
-console.log([1,2,3,4,5,6,7]);
-console.log(new Array(1,2,3,4,5,6,7));
-const newArray=new Array(7);
+console.log([1, 2, 3, 4, 5, 6, 7]);
+console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+const newArray = new Array(7);
 console.log(newArray);
 // newArray.fill(1)
 // console.log(newArray);
 // newArray.fill(1,3);
 // console.log(newArray)
 
-newArray.fill(1,3,5);
+newArray.fill(1, 3, 5);
 console.log(newArray);
 
-const arr=[8,9,10,11,12,13,14,15];
-arr.fill('fill',3,6);
+const arr = [8, 9, 10, 11, 12, 13, 14, 15];
+arr.fill('fill', 3, 6);
 console.log(arr);
 
 //Array.from
-const x=Array.from({length:7},()=>1);
+const x = Array.from({ length: 7 }, () => 1);
 console.log(x);
 
-const y=Array.from({length:7},(_,i)=>i+1); //cur is not uses here so we used throw away(_)
+const y = Array.from({ length: 7 }, (_, i) => i + 1); //cur is not uses here so we used throw away(_)
 console.log(y)
 
-labelBalance.addEventListener('click',function()
-{
-  const movementUI=Array.from(document.querySelectorAll('.movements__value'),(el)=>Number(el.textContent.replace('$','')));
+labelBalance.addEventListener('click', function () {
+  const movementUI = Array.from(document.querySelectorAll('.movements__value'), (el) => Number(el.textContent.replace('$', '')));
 
   // console.log(movementUI.map(el=>el.textContent.replace('$','')))
   console.log(movementUI)
 
-  const movemenUI2=[...document.querySelectorAll('.movements__value')];
+  const movemenUI2 = [...document.querySelectorAll('.movements__value')];
   console.log(movemenUI2)
 })
 
+///----------------Array Methods Practice------------/////
 
+const bankDepositeSum = account.map((mov) => mov.movement).flat().filter((mov) => mov > 0).reduce((acc, mov) => acc + mov, 0);
+console.log(bankDepositeSum)
+
+// const bankDepositeAtleast200=account.flatMap((mov)=>mov.movement).filter((mov)=>mov>=200).length;
+// console.log(bankDepositeAtleast200)
+
+const bankDepositeAtleast200 = account.flatMap((mov) => mov.movement).reduce((acc, mov) => mov >= 200 ? acc + 1 : acc, 0);
+console.log(bankDepositeAtleast200)
+
+const { deposits, withdrawals } = account.map((mov) => mov.movement).flat().reduce((acc, mov) => {
+  // mov>0?(acc.deposits=mov+acc.deposits):(acc.withdrawals=mov+acc.withdrawals)
+  acc[mov > 0 ? 'deposits' : 'withdrawals'] += mov;
+  return acc;
+}, { deposits: 0, withdrawals: 0 })
+console.log(deposits, withdrawals);
+
+//convert title case
+const convertTitleCase = function (title) {
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+  const exceptions = ['a', 'the', 'of', 'in', 'an', 'for', 'or', 'with', 'and'];
+  const titleCase = title.toLowerCase().split(' ').map(word => exceptions.includes(word) ? word : capitalize(word)).join(' ');
+
+  return capitalize(titleCase);
+}
+
+console.log(convertTitleCase('this is a boy wiTh some type Of supeR poWer'));
