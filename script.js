@@ -4,16 +4,40 @@
 
 const account1 = {
   owner: 'Rahid Amin',
-  movement: [100, 200, 300, -400, -500, 600, .85],
+  movement: [100, 200, 300, -400, -500, 600, .85,850],
   interestRate: 1.2,
   pin: 111,
+  movementsDates: [
+    "2013-11-18T21:31:17.178Z",
+    "2013-12-23T07:42:02.383Z",
+    "2024-01-28T09:15:04.904Z",
+    "2024-04-01T10:17:24.185Z",
+    "2023-05-08T14:11:59.604Z",
+    "2023-07-26T17:01:17.194Z",
+    "2024-07-28T23:36:17.929Z",
+    "2023-08-01T10:51:36.790Z",
+  ],
+  currency: "EUR",
+  locale: "pt-PT",
 }
 
 const account2 = {
   owner: 'Mujibul Haque',
   movement: [393, 459, -284, 398, -88],
   interestRate: 1.4,
-  pin: 222
+  pin: 222,
+  movementsDates: [
+    "2023-11-01T13:15:33.035Z",
+    "2023-11-30T09:48:16.867Z",
+    "2023-12-25T06:04:23.907Z",
+    "2024-01-25T14:18:46.235Z",
+    "2024-02-05T16:33:06.386Z",
+    "2023-04-10T14:43:26.374Z",
+    "2023-06-25T18:49:59.371Z",
+    "2023-07-26T12:01:20.894Z",
+  ],
+  currency: "USD",
+  locale: "en-US",
 }
 
 const account3 = {
@@ -54,19 +78,27 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 //----------Number 8:Creating Dom elements-------------
 
-const displayMovements = function (movements, sort = false) {
+const displayMovements = function (acc, sort = false) {
   //it will erase the existing class of movement in html file.
   // console.log(containerMovements.innerHTML);
   containerMovements.innerHTML = '';
 
   //movements.slice.sort() it will make a copy of movements
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort ? acc.movement.slice().sort((a, b) => a - b) : acc.movement;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const date= new Date(acc.movementsDates[i]);
+    const day=`${date.getDate()}`.padStart(2,0);
+    const month=`${date.getMonth()+1}`.padStart(2,0);
+    const year=date.getFullYear();
+    
+    const displayDate=`${day}/${month}/${year}`;
+
     const html = `<div class="movements__row">
         <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-        
+        <div class="movements__date">${displayDate}</div>
         <div class="movements__value">${mov} $</div>
       </div>`;
 
@@ -125,7 +157,7 @@ console.log(account);
 
 const updateUi = function (acc) {
   //Display Movements
-  displayMovements(acc.movement);
+  displayMovements(acc);
 
   //Display balance
   calcDisplayBalance(acc);
@@ -137,6 +169,15 @@ const updateUi = function (acc) {
 
 //Event Handler
 let currentAccount;
+
+currentAccount=account1;
+updateUi(currentAccount);
+containerApp.style.opacity = 100;
+    
+
+
+
+
 btnLogin.addEventListener('click', function (e) {
   //prevent form from submitting`
   e.preventDefault();
@@ -152,6 +193,15 @@ btnLogin.addEventListener('click', function (e) {
     //Display UI and message
     labelWelcome.textContent = `Welcome Back,${currentAccount.owner.split(' ')[0]}`
     containerApp.style.opacity = 100;
+    
+    //current date and time
+    const now=new Date();
+    const day=`${now.getDate()}`.padStart(2,0);
+    const month=`${now.getMonth()+1}`.padStart(2,0);
+    const year=now.getFullYear();
+    const hour=now.getHours();
+    const min=now.getMinutes();
+    labelDate.textContent=`${day}/${month}/${year}, ${hour}:${min}`
 
     //Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -177,6 +227,11 @@ btnTransfer.addEventListener('click', function (event) {
     currentAccount.movement.push(-amount);
     receiverAccount.movement.push(amount);
 
+    //add transfer date
+
+    currentAccount.movementsDates.push(new Date().toISOString());
+    receiverAccount.movementsDates.push(new Date().toISOString());
+
     //Update UI
     updateUi(currentAccount);
   }
@@ -189,7 +244,12 @@ btnLoan.addEventListener('click', function (e) {
   if (amount > 0 && currentAccount.movement.some(function (mov) {
     return mov >= amount * .1;
   })) {
+
     currentAccount.movement.push(amount);
+ 
+    //add loan date
+    currentAccount.movementsDates.push(new Date().toISOString());
+
     updateUi(currentAccount);
 
     inputLoanAmount.value = '';
@@ -224,7 +284,7 @@ btnClose.addEventListener('click', function (e) {
 let sorted = false;
 btnSort.addEventListener('click', function (e) {
   e.preventDefault();
-  displayMovements(currentAccount.movement, !sorted);
+  displayMovements(currentAccount,!sorted);
   sorted = !sorted;
 })
 
