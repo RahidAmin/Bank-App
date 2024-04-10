@@ -282,3 +282,19 @@ console.log(new Date(1711718254903))
 
 future.setFullYear(2100);
 console.log(future)
+
+/////------------Operations with dates--------------////
+
+const future1=new Date(2024,4,5,3,50);
+console.log(+(future1))
+
+
+const calcDaysPassed=function(date1,date2)
+{
+ return Math.abs((date2-date1)/(1000*60*60*24));
+}
+
+const days1=calcDaysPassed(new Date(2023,4,5),new Date(2021,4,5));
+console.log(days1);
+
+///------------------Internationalizing dates---------------////////
