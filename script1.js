@@ -297,4 +297,87 @@ const calcDaysPassed=function(date1,date2)
 const days1=calcDaysPassed(new Date(2023,4,5),new Date(2021,4,5));
 console.log(days1);
 
-///------------------Internationalizing dates---------------////////
+///-----------Internationalizing ApI------------//////
+
+
+//From Youtube
+const dateForBd=new Date();
+
+const dateForBdIntl=new Intl.DateTimeFormat('bn-BD',{
+    year:'numeric',
+    month:'numeric',
+    day:'numeric',
+    hour:'numeric',
+    minute:'numeric',
+}).format(dateForBd);
+console.log(dateForBdIntl);
+
+
+//for individuls
+const dateAndTimeForMyBrowser=new Date();
+const getLocaleForBrowse=navigator.language;
+const optionForPc={
+    day:'numeric',
+    month:'long',
+    year:'numeric',
+    hour:'numeric',
+    minute:'numeric',
+}
+
+const dateForPC=new Intl.DateTimeFormat(getLocaleForBrowse,optionForPc).format(dateAndTimeForMyBrowser);
+console.log(dateForPC)
+
+//For number
+const num1=22333444;
+const option1={
+    style:'currency',  //here can use unit,percent and currency..
+    currency:'USD',
+    // useGrouping:false
+}
+
+const initNumbers=new Intl.NumberFormat('en-US',option1).format(num1);
+console.log(initNumbers)
+
+
+
+
+//internationalizing number
+const num=123456789.45;
+
+const option={
+    style:'unit',
+    unit:'mile-per-hour',
+}
+
+console.log(new Intl.NumberFormat('bn-BD',option).format(num));
+console.log(navigator.language,new Intl.NumberFormat(navigator.language).format(num));
+
+
+///-----------Set Timeout--------------///
+
+setTimeout(() => {
+    console.log('Set Time Out')
+}, 5000);
+
+console.log('Waiting.....');
+
+const ingredients=['olives','spinach'];
+
+
+const pizzaTimeOut=setTimeout((ing1,ing2)=>
+{
+ console.log(`Here is your Pizza..with ${ing1} and ${ing2}`)
+},7000,...ingredients);
+
+if(ingredients.includes('spinach'))
+{
+    clearTimeout(pizzaTimeOut);   //in this case pizzaTimeOut will not work
+}
+
+///----Set Interval---------////
+
+// setInterval(()=>
+// {
+//   const now=new Date();
+//   console.log(now.getSeconds());
+// },1000)
