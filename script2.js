@@ -34,8 +34,9 @@ const account2 = {
         "2023-01-25T14:18:46.235Z",
         "2023-02-05T16:33:06.386Z",
     ],
-    currency: "BDT",
-    locale: "bn-BD",
+    currency: "USD",
+    locale: 'en-US',
+
 }
 
 const account3 = {
@@ -50,8 +51,9 @@ const account3 = {
         "2024-01-25T14:18:46.235Z",
         "2024-02-05T16:33:06.386Z",
     ],
-    currency: "USD",
-    locale: 'en-US',
+
+    currency: "BDT",
+    locale: "bn-BD",
 }
 
 const account = [account1, account2, account3];
