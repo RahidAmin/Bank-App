@@ -55,8 +55,24 @@ const account3 = {
     currency: "BDT",
     locale: "bn-BD",
 }
+const account4 = {
+    owner: 'Morsalin Milton',
+    movement: [10, 194, 530, -222, 82],
+    interestRate: 1.7,
+    pin: 444,
+    movementsDates: [
+        "2023-11-01T13:15:33.035Z",
+        "2024-04-10T09:48:16.867Z",
+        "2023-12-25T06:04:23.907Z",
+        "2024-01-25T14:18:46.235Z",
+        "2024-02-05T16:33:06.386Z",
+    ],
 
-const account = [account1, account2, account3];
+    currency: "BDT",
+    locale: "bn-BD",
+}
+
+const account = [account1, account2, account3, account4];
 
 //Elements
 const labelWelcome = document.querySelector('.welcome');
